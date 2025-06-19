@@ -1,4 +1,4 @@
-namespace Joyful.API.Enitites;
+namespace Joyful.API.Entities;
 
 public class VoteEntity
 {

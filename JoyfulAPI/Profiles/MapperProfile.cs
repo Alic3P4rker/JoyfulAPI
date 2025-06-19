@@ -1,5 +1,5 @@
 using AutoMapper;
-using Joyful.API.Enitites;
+using Joyful.API.Entities;
 using Joyful.API.Models;
 
 namespace Joyful.API.Profiles;

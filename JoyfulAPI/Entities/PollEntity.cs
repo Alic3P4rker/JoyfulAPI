@@ -1,6 +1,6 @@
 using Joyful.API.Enums;
 
-namespace Joyful.API.Enitites;
+namespace Joyful.API.Entities;
 
 public class PollEntity
 {
