@@ -21,7 +21,6 @@ namespace JoyfulAPI.Migrations
             modelBuilder.Entity("Joyful.API.Entities.AccountEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -274,7 +273,7 @@ namespace JoyfulAPI.Migrations
 
             modelBuilder.Entity("Joyful.API.Entities.UserEntity", b =>
                 {
-                    b.Property<Guid>("id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
@@ -282,11 +281,11 @@ namespace JoyfulAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("User");
                 });
@@ -315,6 +314,15 @@ namespace JoyfulAPI.Migrations
                     b.HasIndex("PollId");
 
                     b.ToTable("Votes");
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.AccountEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.UserEntity", null)
+                        .WithOne()
+                        .HasForeignKey("Joyful.API.Entities.AccountEntity", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Joyful.API.Entities.PollEntity", b =>

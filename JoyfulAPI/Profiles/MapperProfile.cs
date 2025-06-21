@@ -13,7 +13,10 @@ public class MapperProfile : Profile
         CreateMap<LocationDto, LocationEntity>();
         CreateMap<PlannerDto, PlannerEntity>();
         CreateMap<PollDto, PollEntity>();
-        CreateMap<UserDto, UserEntity>();
+
+        CreateMap<UserCreateDto, UserEntity>().ReverseMap();
+        CreateMap<UserEntity, UserDetailsDto>();
+
         CreateMap<VoteDto, VoteEntity>();
     }
 }

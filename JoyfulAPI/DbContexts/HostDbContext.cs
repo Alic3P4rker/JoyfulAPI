@@ -23,6 +23,7 @@ public class HostDbContext : DbContext
         modelBuilder.ApplyConfiguration(new PlannerConfiguration());
         modelBuilder.ApplyConfiguration(new PollConfiguration());
         modelBuilder.ApplyConfiguration(new VoteConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
     }
 
 }

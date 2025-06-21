@@ -35,11 +35,18 @@ internal sealed class UserRepository : IUserRepository
         return entities;
     }
 
-    public Task<UserEntity?> RetrieveAsync(string emailAddress, CancellationToken cancellationToken)
+    public Task<UserEntity?> RetrieveByEmailAsync(string emailAddress, CancellationToken cancellationToken)
     {
         return _context.User
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.EmailAddress.Equals(emailAddress), cancellationToken);
+    }
+
+    public Task<UserEntity?> RetrieveByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return _context.User
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id.Equals(id), cancellationToken);
     }
 
     public Task UpdateAsync(UserEntity userEntity, CancellationToken cancellationToken)
@@ -53,4 +60,5 @@ internal sealed class UserRepository : IUserRepository
     {
         return _context.SaveChangesAsync(cancellationToken);
     }
+
 }
