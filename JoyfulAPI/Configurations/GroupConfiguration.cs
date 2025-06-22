@@ -10,5 +10,11 @@ public sealed class GroupConfiguration : IEntityTypeConfiguration<GroupEntity>
     {
         builder.Property(g => g.Status)
             .HasConversion<string>();
+
+        builder
+            .HasMany<PlannerGroupEntity>()
+            .WithOne(g => g.Group)
+            .HasForeignKey(g => g.GroupId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

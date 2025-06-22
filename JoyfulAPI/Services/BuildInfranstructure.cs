@@ -15,6 +15,7 @@ public static class BuildInfranstructure
         services.AddScoped<IPollRepository, PollRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IVoteRepository, VoteRepository>();
+        services.AddScoped<IPlannerGroupRepository, PlannerGroupRepository>();
 
         return services;
     }

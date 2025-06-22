@@ -9,9 +9,9 @@ public class MapperProfile : Profile
     public MapperProfile()
     {
         CreateMap<EventDto, EventEntity>();
-        CreateMap<GroupDto, GroupEntity>();
+        CreateMap<GroupDto, GroupEntity>().ReverseMap();
         CreateMap<LocationDto, LocationEntity>();
-        CreateMap<PlannerDto, PlannerEntity>();
+        CreateMap<PlannerDto, PlannerEntity>().ReverseMap();
         CreateMap<PollDto, PollEntity>();
 
         CreateMap<UserCreateDto, UserEntity>().ReverseMap();

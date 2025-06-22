@@ -10,5 +10,17 @@ public sealed class PlannerConfiguration : IEntityTypeConfiguration<PlannerEntit
     {
         builder.Property(p => p.Gender)
             .HasConversion<string>();
+
+        builder.Property(p => p.Role)
+            .HasConversion<string>();
+
+        builder.Property(p => p.Status)
+            .HasConversion<string>();
+
+        builder
+            .HasMany<PlannerGroupEntity>()
+            .WithOne()
+            .HasForeignKey(p => p.PlannerId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

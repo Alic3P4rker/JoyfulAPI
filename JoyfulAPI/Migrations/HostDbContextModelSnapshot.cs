@@ -207,11 +207,13 @@ namespace JoyfulAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("TelephoneNumber")
                         .HasColumnType("longtext");
@@ -219,6 +221,21 @@ namespace JoyfulAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Planners");
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.PlannerGroupEntity", b =>
+                {
+                    b.Property<Guid>("PlannerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("PlannerId", "GroupId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("PlannerGroups");
                 });
 
             modelBuilder.Entity("Joyful.API.Entities.PollEntity", b =>
@@ -323,6 +340,23 @@ namespace JoyfulAPI.Migrations
                         .HasForeignKey("Joyful.API.Entities.AccountEntity", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.PlannerGroupEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.GroupEntity", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Joyful.API.Entities.PlannerEntity", null)
+                        .WithMany()
+                        .HasForeignKey("PlannerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("Joyful.API.Entities.PollEntity", b =>

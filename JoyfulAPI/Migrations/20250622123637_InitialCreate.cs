@@ -114,8 +114,10 @@ namespace JoyfulAPI.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TelephoneNumber = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Role = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -173,6 +175,31 @@ namespace JoyfulAPI.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "PlannerGroups",
+                columns: table => new
+                {
+                    PlannerId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    GroupId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlannerGroups", x => new { x.PlannerId, x.GroupId });
+                    table.ForeignKey(
+                        name: "FK_PlannerGroups_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PlannerGroups_Planners_PlannerId",
+                        column: x => x.PlannerId,
+                        principalTable: "Planners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Accounts",
                 columns: table => new
                 {
@@ -219,6 +246,11 @@ namespace JoyfulAPI.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlannerGroups_GroupId",
+                table: "PlannerGroups",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Polls_EventId",
                 table: "Polls",
                 column: "EventId");
@@ -236,19 +268,22 @@ namespace JoyfulAPI.Migrations
                 name: "Accounts");
 
             migrationBuilder.DropTable(
-                name: "Groups");
-
-            migrationBuilder.DropTable(
                 name: "Locations");
 
             migrationBuilder.DropTable(
-                name: "Planners");
+                name: "PlannerGroups");
 
             migrationBuilder.DropTable(
                 name: "Votes");
 
             migrationBuilder.DropTable(
                 name: "User");
+
+            migrationBuilder.DropTable(
+                name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "Planners");
 
             migrationBuilder.DropTable(
                 name: "Polls");
