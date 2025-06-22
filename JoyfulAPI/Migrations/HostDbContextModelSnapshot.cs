@@ -105,6 +105,10 @@ namespace JoyfulAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedPlannerId");
+
+                    b.HasIndex("GroupId");
+
                     b.ToTable("Events");
                 });
 
@@ -143,6 +147,8 @@ namespace JoyfulAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GroupLeaderId");
+
                     b.ToTable("Groups");
                 });
 
@@ -175,6 +181,8 @@ namespace JoyfulAPI.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PlannerId");
 
                     b.ToTable("Locations");
                 });
@@ -338,6 +346,39 @@ namespace JoyfulAPI.Migrations
                     b.HasOne("Joyful.API.Entities.UserEntity", null)
                         .WithOne()
                         .HasForeignKey("Joyful.API.Entities.AccountEntity", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.EventEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.PlannerEntity", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedPlannerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Joyful.API.Entities.GroupEntity", null)
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.GroupEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.PlannerEntity", null)
+                        .WithMany()
+                        .HasForeignKey("GroupLeaderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.LocationEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.PlannerEntity", null)
+                        .WithMany()
+                        .HasForeignKey("PlannerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

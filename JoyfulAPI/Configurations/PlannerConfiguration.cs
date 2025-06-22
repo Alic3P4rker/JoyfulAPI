@@ -22,5 +22,23 @@ public sealed class PlannerConfiguration : IEntityTypeConfiguration<PlannerEntit
             .WithOne()
             .HasForeignKey(p => p.PlannerId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany<GroupEntity>()
+            .WithOne()
+            .HasForeignKey(g => g.GroupLeaderId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder
+            .HasMany<LocationEntity>()
+            .WithOne()
+            .HasForeignKey(l => l.PlannerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany<EventEntity>()
+            .WithOne()
+            .HasForeignKey(e => e.CreatedPlannerId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

@@ -16,5 +16,11 @@ public sealed class GroupConfiguration : IEntityTypeConfiguration<GroupEntity>
             .WithOne(g => g.Group)
             .HasForeignKey(g => g.GroupId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany<EventEntity>()
+            .WithOne()
+            .HasForeignKey(e => e.GroupId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

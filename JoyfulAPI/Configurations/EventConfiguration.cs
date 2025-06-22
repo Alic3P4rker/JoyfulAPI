@@ -19,7 +19,7 @@ public sealed class EventConfiguration : IEntityTypeConfiguration<EventEntity>
 
         builder.Property(p => p.EventVisibity)
             .HasConversion<string>();
-            
+
         builder
             .HasMany<PollEntity>()
             .WithOne()
