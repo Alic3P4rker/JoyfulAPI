@@ -118,6 +118,29 @@ namespace JoyfulAPI.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Themes",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    PlannerId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Themes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Themes_Planners_PlannerId",
+                        column: x => x.PlannerId,
+                        principalTable: "Planners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Accounts",
                 columns: table => new
                 {
@@ -135,6 +158,31 @@ namespace JoyfulAPI.Migrations
                         name: "FK_Accounts_User_Id",
                         column: x => x.Id,
                         principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "PlannerGroups",
+                columns: table => new
+                {
+                    PlannerId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    GroupId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlannerGroups", x => new { x.PlannerId, x.GroupId });
+                    table.ForeignKey(
+                        name: "FK_PlannerGroups_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PlannerGroups_Planners_PlannerId",
+                        column: x => x.PlannerId,
+                        principalTable: "Planners",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -183,31 +231,11 @@ namespace JoyfulAPI.Migrations
                         column: x => x.CreatedPlannerId,
                         principalTable: "Planners",
                         principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "PlannerGroups",
-                columns: table => new
-                {
-                    PlannerId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    GroupId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlannerGroups", x => new { x.PlannerId, x.GroupId });
                     table.ForeignKey(
-                        name: "FK_PlannerGroups_Groups_GroupId",
-                        column: x => x.GroupId,
-                        principalTable: "Groups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PlannerGroups_Planners_PlannerId",
-                        column: x => x.PlannerId,
-                        principalTable: "Planners",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Events_Themes_ThemeId",
+                        column: x => x.ThemeId,
+                        principalTable: "Themes",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -278,6 +306,11 @@ namespace JoyfulAPI.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Events_ThemeId",
+                table: "Events",
+                column: "ThemeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Groups_GroupLeaderId",
                 table: "Groups",
                 column: "GroupLeaderId");
@@ -296,6 +329,11 @@ namespace JoyfulAPI.Migrations
                 name: "IX_Polls_EventId",
                 table: "Polls",
                 column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Themes_PlannerId",
+                table: "Themes",
+                column: "PlannerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Votes_PollId",
@@ -329,6 +367,9 @@ namespace JoyfulAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "Themes");
 
             migrationBuilder.DropTable(
                 name: "Planners");
