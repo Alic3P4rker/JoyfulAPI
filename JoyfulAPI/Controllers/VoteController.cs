@@ -98,7 +98,7 @@ public class VoteController : ControllerBase
         return Ok("Vote Submitted");
     }
 
-    [HttpGet("{pollId:guid}/get-poll")]
+    [HttpGet("{pollId:guid}/get-poll-results")]
     public async Task<ActionResult> GetPollResultsAsync(Guid pollId, CancellationToken cancellationToken)
     {
         PollEntity? pollEntity = await _pollRepository.RetrievePollAsync(pollId, cancellationToken);
