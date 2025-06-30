@@ -35,6 +35,16 @@ public sealed class VoteRepository : IVoteRepository
         return entities;
     }
 
+    public async Task<IEnumerable<VoteEntity>> ListVotesForPollAsync(Guid id, CancellationToken cancellationToken)
+    {
+        IEnumerable<VoteEntity> entities = await _context.Votes
+            .AsNoTracking()
+            .Where(v => v.PollId.Equals(id))
+            .ToArrayAsync();
+
+        return entities;
+    }
+
     public Task<VoteEntity?> RetrieveAsync(Guid id, CancellationToken cancellationToken)
     {
         return _context.Votes
@@ -53,5 +63,4 @@ public sealed class VoteRepository : IVoteRepository
     {
         return _context.SaveChangesAsync(cancellationToken);
     }
-
 }

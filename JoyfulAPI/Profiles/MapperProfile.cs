@@ -8,15 +8,22 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        CreateMap<EventDto, EventEntity>();
         CreateMap<GroupDto, GroupEntity>().ReverseMap();
         CreateMap<LocationDto, LocationEntity>().ReverseMap();
         CreateMap<PlannerDto, PlannerEntity>().ReverseMap();
-        CreateMap<PollDto, PollEntity>();
 
         CreateMap<UserCreateDto, UserEntity>().ReverseMap();
         CreateMap<UserEntity, UserDetailsDto>();
 
         CreateMap<VoteDto, VoteEntity>();
+
+        CreateMap<ThemeCreateDto, ThemeEntity>();
+        CreateMap<ThemeDetailsDto, ThemeEntity>().ReverseMap();
+
+        CreateMap<EventCreateDto, EventEntity>();
+        CreateMap<EventDetailsDto, EventEntity>().ReverseMap();
+
+        CreateMap<PollCreateDto, PollEntity>();
+        CreateMap<PollDetailsDto, PollEntity>().ReverseMap();
     }
 }

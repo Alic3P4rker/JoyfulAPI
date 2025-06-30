@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JoyfulAPI.Migrations
 {
     [DbContext(typeof(HostDbContext))]
-    [Migration("20250622145600_InitialCreate")]
+    [Migration("20250629114315_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -111,6 +111,8 @@ namespace JoyfulAPI.Migrations
                     b.HasIndex("CreatedPlannerId");
 
                     b.HasIndex("GroupId");
+
+                    b.HasIndex("ThemeId");
 
                     b.ToTable("Events");
                 });
@@ -299,6 +301,30 @@ namespace JoyfulAPI.Migrations
                     b.ToTable("Polls");
                 });
 
+            modelBuilder.Entity("Joyful.API.Entities.ThemeEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("PlannerId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlannerId");
+
+                    b.ToTable("Themes");
+                });
+
             modelBuilder.Entity("Joyful.API.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -366,6 +392,10 @@ namespace JoyfulAPI.Migrations
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Joyful.API.Entities.ThemeEntity", null)
+                        .WithMany()
+                        .HasForeignKey("ThemeId");
                 });
 
             modelBuilder.Entity("Joyful.API.Entities.GroupEntity", b =>
@@ -408,6 +438,15 @@ namespace JoyfulAPI.Migrations
                     b.HasOne("Joyful.API.Entities.EventEntity", null)
                         .WithMany()
                         .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.ThemeEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.PlannerEntity", null)
+                        .WithMany()
+                        .HasForeignKey("PlannerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

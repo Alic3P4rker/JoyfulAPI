@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Joyful.API.Abstractions.Repositories;
 using Joyful.API.Entities;
 using Joyful.API.Models;
+using Joyful.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
@@ -16,19 +17,22 @@ public class AuthenticationController : ControllerBase
     private readonly IAccountRepository _accountRepository;
     private readonly IConfiguration _configuration;
     private readonly ILogger<AuthenticationController> _logger;
+    private readonly IPasswordService _password;
 
     public AuthenticationController
     (
         IUserRepository userRepository,
         IAccountRepository accountRepository,
         IConfiguration configuration,
-        ILogger<AuthenticationController> logger
+        ILogger<AuthenticationController> logger,
+        IPasswordService password
     )
     {
         _userRepository = userRepository;
         _accountRepository = accountRepository;
         _configuration = configuration;
         _logger = logger;
+        _password = password;
     }
     
     [HttpPost]
@@ -43,7 +47,7 @@ public class AuthenticationController : ControllerBase
         }
 
         //Step 2: Verify password
-        bool isPasswordValid = true;
+        bool isPasswordValid = _password.VerifyPassword(login.Password, userEntity.PasswordHash);
         if (!isPasswordValid)
         {
             _logger.LogInformation($"Invalid details");

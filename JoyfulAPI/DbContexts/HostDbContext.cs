@@ -13,6 +13,7 @@ public class HostDbContext : DbContext
     public DbSet<PollEntity> Polls { get; set; }
     public DbSet<UserEntity> User { get; set; }
     public DbSet<VoteEntity> Votes { get; set; }
+    public DbSet<ThemeEntity> Themes { get; set; }
     public DbSet<PlannerGroupEntity> PlannerGroups { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,6 +27,7 @@ public class HostDbContext : DbContext
         modelBuilder.ApplyConfiguration(new VoteConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new PlannerGroupConfiguration());
+        modelBuilder.ApplyConfiguration(new ThemeConfiguration());
     }
 
 }
