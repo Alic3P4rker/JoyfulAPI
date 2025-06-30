@@ -14,16 +14,19 @@ public class VoteController : ControllerBase
 {
     private readonly IPollRepository _pollRepository;
     private readonly IVoteRepository _voteRepository;
+    private readonly IPlannerRepository _plannerRepository;
     private readonly ILogger<VoteController> _logger;
     private readonly IMapper _mapper;
 
     public VoteController(
         IPollRepository pollRepository,
         IVoteRepository voteRepository,
+        IPlannerRepository plannerRepository,
         ILogger<VoteController> logger,
         IMapper mapper
     )
     {
+        _plannerRepository = plannerRepository;
         _pollRepository = pollRepository;
         _voteRepository = voteRepository;
         _logger = logger;
@@ -41,12 +44,20 @@ public class VoteController : ControllerBase
             return NotFound("Unable to retrieve poll");
         }
 
-        //Step 2: Verify poll status
-        if (pollEntity.PollStatus != PollStatus.Open)
+        //Step 1.5: Verify planner
+        PlannerEntity? plannerEntity = await _plannerRepository.RetrieveAsync(voterId, cancellationToken);
+        if (plannerEntity is null)
         {
-            _logger.LogInformation("Voting is not open");
-            return Unauthorized("Voting closed");
+            _logger.LogInformation($"Unable to find voter with this voter id: {voterId}");
+            return NotFound("Unable to retrive voter");
         }
+
+        //Step 2: Verify poll status
+            if (pollEntity.PollStatus != PollStatus.Open)
+            {
+                _logger.LogInformation("Voting is not open");
+                return Unauthorized("Voting closed");
+            }
 
         //Step 3: Getting pollOptions
         List<string>? pollOptions = JsonSerializer.Deserialize<List<string>>(pollEntity.OptionsJson);
