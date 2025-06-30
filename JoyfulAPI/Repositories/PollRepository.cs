@@ -35,6 +35,13 @@ internal sealed class PollRepository : IPollRepository
         return entities;
     }
 
+    public Task<PollEntity?> RetrievePollAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return _context.Polls
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
+    }
+
     public Task<PollEntity?> RetrievePollForEventAsync(Guid eventId, Guid pollId, CancellationToken cancellationToken)
     {
         return _context.Polls
@@ -53,5 +60,4 @@ internal sealed class PollRepository : IPollRepository
     {
         return _context.SaveChangesAsync(cancellationToken);
     }
-
 }
