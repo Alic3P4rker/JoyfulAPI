@@ -69,7 +69,6 @@ internal sealed class ChatRepository : IChatRepository
     public Task<ChatEntity?> RetrieveChatAsync(int chatId, CancellationToken cancellationToken)
     {
         return _context.Chats
-            .AsNoTracking()
             .Include(c => c.Messages)
             .Include(c => c.ChatParticipants)
             .FirstOrDefaultAsync(c => c.Id.Equals(chatId), cancellationToken);

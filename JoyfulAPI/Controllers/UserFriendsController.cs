@@ -112,10 +112,10 @@ public class UserFriendsController : ControllerBase
         return Ok(UserFriendsEntityDetails);
     }
 
-    [HttpGet("get-all-friends")]
-    public async Task<IActionResult> GetAllFriendsAsync(CancellationToken cancellationToken)
+    [HttpGet("list-all-friends-for-user/{userId:guid}")]
+    public async Task<IActionResult> GetAllFriendsForUserAsync(Guid userId, CancellationToken cancellationToken)
     {
-        IEnumerable<UserFriendsEntity> userFriendsEntities = await _userFriendsRepository.ListAsync(cancellationToken);
+        IEnumerable<UserFriendsEntity> userFriendsEntities = await _userFriendsRepository.ListAsync(userId, cancellationToken);
         if (!userFriendsEntities.Any())
         {
             _logger.LogInformation("No friends found.");
@@ -136,5 +136,34 @@ public class UserFriendsController : ControllerBase
 
         IEnumerable<PlannerDto> plannersInformation = _mapper.Map<IEnumerable<PlannerDto>>(plannerEntities);
         return Ok(plannersInformation);
+    }
+
+    [HttpGet("list-all-potential-friends/{userId:guid}")]
+    public async Task<IActionResult> ListAllPotentialFriendsAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        IEnumerable<PlannerEntity> plannerEntities = await _plannerRepository.ListAsync(cancellationToken);
+        if (!plannerEntities.Any())
+        {
+            _logger.LogInformation("No potential friends found.");
+            return NotFound("No potential friends found.");
+        }
+
+        IEnumerable<PlannerDto> potentialFriends = new List<PlannerDto>();
+
+        foreach (PlannerEntity plannerEntity in plannerEntities)
+        {
+            if (plannerEntity.Id == userId)
+            {
+                continue;
+            }
+
+            UserFriendsEntity? userFriendsEntity = await _userFriendsRepository.RetrieveAsync(userId, plannerEntity.Id, cancellationToken);
+            if (userFriendsEntity is null)
+            {
+                potentialFriends = potentialFriends.Append(_mapper.Map<PlannerDto>(plannerEntity));
+            }
+        }
+
+        return Ok(potentialFriends);
     }
 }

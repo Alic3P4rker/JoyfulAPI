@@ -26,10 +26,11 @@ internal sealed class UserFriendsRepository : IUserFriendsRepository
         return Task.CompletedTask;
     }
 
-    public async Task<IEnumerable<UserFriendsEntity>> ListAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<UserFriendsEntity>> ListAsync(Guid userId, CancellationToken cancellationToken)
     {
         IEnumerable<UserFriendsEntity> UserFriendsEntity = await _context.UserFriends
             .AsNoTracking()
+            .Where(uf => uf.UserId == userId)
             .Include(uf => uf.Friend)
             .ToArrayAsync(cancellationToken);
 
