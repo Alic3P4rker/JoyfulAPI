@@ -25,5 +25,8 @@ public class MapperProfile : Profile
 
         CreateMap<PollCreateDto, PollEntity>();
         CreateMap<PollDetailsDto, PollEntity>().ReverseMap();
+
+        CreateMap<UserFriendsCreateDto, UserFriendsEntity>();
+        CreateMap<UserFriendsDetailsDto, UserFriendsEntity>().ReverseMap();
     }
 }

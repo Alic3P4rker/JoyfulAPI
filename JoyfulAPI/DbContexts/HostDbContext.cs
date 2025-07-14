@@ -15,6 +15,9 @@ public class HostDbContext : DbContext
     public DbSet<VoteEntity> Votes { get; set; }
     public DbSet<ThemeEntity> Themes { get; set; }
     public DbSet<PlannerGroupEntity> PlannerGroups { get; set; }
+    public DbSet<ChatEntity> Chats { get; set; }
+    public DbSet<MessageEntity> Messages { get; set; }
+    public DbSet<UserFriendsEntity> UserFriends { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +31,7 @@ public class HostDbContext : DbContext
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new PlannerGroupConfiguration());
         modelBuilder.ApplyConfiguration(new ThemeConfiguration());
+        modelBuilder.ApplyConfiguration(new UserFriendsEntityConfiguration());
     }
 
 }
