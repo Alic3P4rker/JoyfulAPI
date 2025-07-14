@@ -28,5 +28,8 @@ public class MapperProfile : Profile
 
         CreateMap<UserFriendsCreateDto, UserFriendsEntity>();
         CreateMap<UserFriendsDetailsDto, UserFriendsEntity>().ReverseMap();
+
+        CreateMap<ChatCreateDto, ChatEntity>();
+        CreateMap<ChatDetailsDto, ChatEntity>().ReverseMap();
     }
 }

@@ -17,6 +17,7 @@ public static class BuildInfranstructure
         services.AddScoped<IVoteRepository, VoteRepository>();
         services.AddScoped<IPlannerGroupRepository, PlannerGroupRepository>();
         services.AddScoped<IThemeRepository, ThemeRepository>();
+        services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IUserFriendsRepository, UserFriendsRepository>();
         services.AddScoped<IPasswordService, PasswordService>();
 

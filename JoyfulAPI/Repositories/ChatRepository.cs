@@ -35,10 +35,10 @@ internal sealed class ChatRepository : IChatRepository
 
         return _context.Chats
             .AsNoTracking()
-            .Include(c => c.Participants)
-            .Where(c => c.CreatedById == creatorId &&
-                        c.Participants.Count == participantsCount &&
-                        c.Participants.All(p => sortedParticipantIds.Contains(p.FriendId)))
+            .Include(c => c.ChatParticipants)
+            .Where(c => 
+                    c.ChatParticipants.Count == participantsCount &&
+                    c.ChatParticipants.All(p => sortedParticipantIds.Contains(p.UserId)))
             .FirstOrDefaultAsync(cancellationToken);
     }
 
@@ -47,10 +47,10 @@ internal sealed class ChatRepository : IChatRepository
     {
         return _context.Chats
             .AsNoTracking()
-            .Include(c => c.Participants)
-            .FirstOrDefaultAsync(c => c.Participants.Count == 2 &&
-                                      c.Participants.Any(p => p.FriendId == userId1) &&
-                                      c.Participants.Any(p => p.FriendId == userId2), cancellationToken);
+            .Include(c => c.ChatParticipants)
+            .FirstOrDefaultAsync(c => c.ChatParticipants.Count == 2 &&
+                                      c.ChatParticipants.Any(p => p.UserId == userId1) &&
+                                      c.ChatParticipants.Any(p => p.UserId == userId2), cancellationToken);
     }
 
     public async Task<IEnumerable<ChatEntity>> ListChatsAsync(Guid userid, CancellationToken cancellationToken)
@@ -58,9 +58,9 @@ internal sealed class ChatRepository : IChatRepository
         IEnumerable<ChatEntity> chats = await _context.Chats
             .AsNoTracking()
             .Include(c => c.Messages)
-            .Include(c => c.Participants)
+            .Include(c => c.ChatParticipants)
             .Where(c => c.CreatedById.Equals(userid) || 
-                        c.Participants.Any(p => p.FriendId.Equals(userid)))
+                        c.ChatParticipants.Any(p => p.UserId.Equals(userid)))
             .ToArrayAsync(cancellationToken);
 
         return chats;
@@ -71,7 +71,7 @@ internal sealed class ChatRepository : IChatRepository
         return _context.Chats
             .AsNoTracking()
             .Include(c => c.Messages)
-            .Include(c => c.Participants)
+            .Include(c => c.ChatParticipants)
             .FirstOrDefaultAsync(c => c.Id.Equals(chatId), cancellationToken);
 
     }

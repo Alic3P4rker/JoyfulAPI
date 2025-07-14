@@ -9,6 +9,6 @@ public class ChatEntity
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public UserEntity CreatedBy { get; set; } = null!;
-    public ICollection<UserFriendsEntity> Participants { get; set; } = new List<UserFriendsEntity>();
+    public ICollection<ChatParticipantEntity> ChatParticipants { get; set; } = new List<ChatParticipantEntity>();
     public ICollection<MessageEntity> Messages { get; set; } = new List<MessageEntity>();
 }

@@ -41,7 +41,10 @@ internal sealed class UserFriendsRepository : IUserFriendsRepository
         return _context.UserFriends
             .AsNoTracking()
             .Include(uf => uf.Friend)
-            .FirstOrDefaultAsync(uf => uf.UserId == userId && uf.FriendId == friendId, cancellationToken);
+            .FirstOrDefaultAsync(
+                uf => (uf.UserId == userId && uf.FriendId == friendId)
+                || (uf.UserId == friendId && uf.FriendId == userId),
+                cancellationToken);
     }
 
     public Task SaveChangesAsync(CancellationToken cancellationToken)

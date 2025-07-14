@@ -18,6 +18,7 @@ public class HostDbContext : DbContext
     public DbSet<ChatEntity> Chats { get; set; }
     public DbSet<MessageEntity> Messages { get; set; }
     public DbSet<UserFriendsEntity> UserFriends { get; set; }
+    public DbSet<ChatParticipantEntity> ChatParticipants { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,6 +33,7 @@ public class HostDbContext : DbContext
         modelBuilder.ApplyConfiguration(new PlannerGroupConfiguration());
         modelBuilder.ApplyConfiguration(new ThemeConfiguration());
         modelBuilder.ApplyConfiguration(new UserFriendsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ChatParticipantConfiguration());
     }
 
 }

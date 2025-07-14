@@ -17,5 +17,6 @@ public class UserEntity
         set => _passwordHash = value;
     }
 
+    public ICollection<ChatParticipantEntity> ChatParticipations { get; set; } = new List<ChatParticipantEntity>();
     public ICollection<UserFriendsEntity> Friends { get; set; } = new List<UserFriendsEntity>();
 }
