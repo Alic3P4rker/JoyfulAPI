@@ -19,4 +19,5 @@ public class UserEntity
 
     public ICollection<ChatParticipantEntity> ChatParticipations { get; set; } = new List<ChatParticipantEntity>();
     public ICollection<UserFriendsEntity> Friends { get; set; } = new List<UserFriendsEntity>();
+    public ICollection<MessageEntity> Messages { get; set; } = new List<MessageEntity>();
 }

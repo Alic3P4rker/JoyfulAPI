@@ -233,15 +233,12 @@ namespace JoyfulAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("ChatEntityId")
+                    b.Property<int>("ChatId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<Guid>("ReceiverId")
-                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("SenderId")
                         .HasColumnType("char(36)");
@@ -254,9 +251,7 @@ namespace JoyfulAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatEntityId");
-
-                    b.HasIndex("ReceiverId");
+                    b.HasIndex("ChatId");
 
                     b.HasIndex("SenderId");
 
@@ -537,23 +532,19 @@ namespace JoyfulAPI.Migrations
 
             modelBuilder.Entity("Joyful.API.Entities.MessageEntity", b =>
                 {
-                    b.HasOne("Joyful.API.Entities.ChatEntity", null)
+                    b.HasOne("Joyful.API.Entities.ChatEntity", "Chat")
                         .WithMany("Messages")
-                        .HasForeignKey("ChatEntityId");
-
-                    b.HasOne("Joyful.API.Entities.UserEntity", "Receiver")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId")
+                        .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Joyful.API.Entities.UserEntity", "Sender")
-                        .WithMany()
+                        .WithMany("Messages")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Receiver");
+                    b.Navigation("Chat");
 
                     b.Navigation("Sender");
                 });
@@ -633,6 +624,8 @@ namespace JoyfulAPI.Migrations
                     b.Navigation("ChatParticipations");
 
                     b.Navigation("Friends");
+
+                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }

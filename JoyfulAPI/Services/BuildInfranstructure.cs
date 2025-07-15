@@ -19,6 +19,7 @@ public static class BuildInfranstructure
         services.AddScoped<IThemeRepository, ThemeRepository>();
         services.AddScoped<IChatRepository, ChatRepository>();
         services.AddScoped<IUserFriendsRepository, UserFriendsRepository>();
+        services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IPasswordService, PasswordService>();
 
         return services;

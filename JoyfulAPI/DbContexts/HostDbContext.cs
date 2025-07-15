@@ -34,6 +34,7 @@ public class HostDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ThemeConfiguration());
         modelBuilder.ApplyConfiguration(new UserFriendsEntityConfiguration());
         modelBuilder.ApplyConfiguration(new ChatParticipantConfiguration());
+        modelBuilder.ApplyConfiguration(new MessagesConfiguration());
     }
 
 }
