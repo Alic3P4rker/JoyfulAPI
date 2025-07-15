@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JoyfulAPI.Migrations
 {
     [DbContext(typeof(HostDbContext))]
-    [Migration("20250629114315_InitialCreate")]
+    [Migration("20250714220021_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -41,6 +41,44 @@ namespace JoyfulAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.ChatEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.ChatParticipantEntity", b =>
+                {
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("ChatId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ChatParticipants");
                 });
 
             modelBuilder.Entity("Joyful.API.Entities.EventEntity", b =>
@@ -190,6 +228,37 @@ namespace JoyfulAPI.Migrations
                     b.HasIndex("PlannerId");
 
                     b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.MessageEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Joyful.API.Entities.PlannerEntity", b =>
@@ -344,6 +413,24 @@ namespace JoyfulAPI.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("Joyful.API.Entities.UserFriendsEntity", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("FriendId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("UserId", "FriendId");
+
+                    b.HasIndex("FriendId");
+
+                    b.ToTable("UserFriends");
+                });
+
             modelBuilder.Entity("Joyful.API.Entities.VoteEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -377,6 +464,36 @@ namespace JoyfulAPI.Migrations
                         .HasForeignKey("Joyful.API.Entities.AccountEntity", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.ChatEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.UserEntity", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.ChatParticipantEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.ChatEntity", "Chat")
+                        .WithMany("ChatParticipants")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Joyful.API.Entities.UserEntity", "User")
+                        .WithMany("ChatParticipations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Joyful.API.Entities.EventEntity", b =>
@@ -416,6 +533,25 @@ namespace JoyfulAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Joyful.API.Entities.MessageEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.ChatEntity", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Joyful.API.Entities.UserEntity", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("Joyful.API.Entities.PlannerGroupEntity", b =>
                 {
                     b.HasOne("Joyful.API.Entities.GroupEntity", "Group")
@@ -451,6 +587,25 @@ namespace JoyfulAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Joyful.API.Entities.UserFriendsEntity", b =>
+                {
+                    b.HasOne("Joyful.API.Entities.UserEntity", "Friend")
+                        .WithMany()
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Joyful.API.Entities.UserEntity", "User")
+                        .WithMany("Friends")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Friend");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Joyful.API.Entities.VoteEntity", b =>
                 {
                     b.HasOne("Joyful.API.Entities.PollEntity", null)
@@ -458,6 +613,22 @@ namespace JoyfulAPI.Migrations
                         .HasForeignKey("PollId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.ChatEntity", b =>
+                {
+                    b.Navigation("ChatParticipants");
+
+                    b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("Joyful.API.Entities.UserEntity", b =>
+                {
+                    b.Navigation("ChatParticipations");
+
+                    b.Navigation("Friends");
+
+                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }

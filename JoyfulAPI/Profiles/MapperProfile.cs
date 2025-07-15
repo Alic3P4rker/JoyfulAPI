@@ -25,5 +25,14 @@ public class MapperProfile : Profile
 
         CreateMap<PollCreateDto, PollEntity>();
         CreateMap<PollDetailsDto, PollEntity>().ReverseMap();
+
+        CreateMap<UserFriendsCreateDto, UserFriendsEntity>();
+        CreateMap<UserFriendsDetailsDto, UserFriendsEntity>().ReverseMap();
+
+        CreateMap<ChatCreateDto, ChatEntity>();
+        CreateMap<ChatDetailsDto, ChatEntity>().ReverseMap();
+
+        CreateMap<MessageCreateDto, MessageEntity>();
+        CreateMap<MessageEntity, MessageDetailsDto>().ReverseMap();
     }
 }

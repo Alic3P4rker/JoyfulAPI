@@ -78,7 +78,7 @@ public class AuthenticationController : ControllerBase
             claimsForToken,
             DateTime.UtcNow,
 #warning long time for now replace with shorter time and with refresh tokens
-            DateTime.UtcNow.AddMinutes(15),
+            DateTime.UtcNow.AddMinutes(2),
             signingCredentials
         );
 
