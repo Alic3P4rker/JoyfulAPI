@@ -25,20 +25,28 @@ internal sealed class PollRepository : IPollRepository
         return Task.CompletedTask;
     }
 
-    public async Task<IEnumerable<PollEntity>> ListAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<PollEntity>> ListPollsForEventAsync(Guid id, CancellationToken cancellationToken)
     {
         IEnumerable<PollEntity> entities = await _context.Polls
             .AsNoTracking()
+            .Where(p => p.EventId.Equals(id))
             .ToArrayAsync();
 
         return entities;
     }
 
-    public Task<PollEntity?> RetrieveAsync(Guid id, CancellationToken cancellationToken)
+    public Task<PollEntity?> RetrievePollAsync(Guid id, CancellationToken cancellationToken)
     {
         return _context.Polls
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
+    }
+
+    public Task<PollEntity?> RetrievePollForEventAsync(Guid eventId, Guid pollId, CancellationToken cancellationToken)
+    {
+        return _context.Polls
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.EventId.Equals(eventId) && p.Id.Equals(pollId), cancellationToken);
     }
 
     public Task UpdateAsync(PollEntity pollEntity, CancellationToken cancellationToken)

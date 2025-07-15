@@ -39,14 +39,8 @@ public class PlannerController : ControllerBase
             return NotFound($"Unable to find user with email address: {planner.emailAddress}");
         }
 
-        PlannerEntity? tempPlannerEntity = await _plannerRepository.RetrieveAsync(planner.id, cancellationToken);
-        if (tempPlannerEntity is not null)
-        {
-            _logger.LogError($"Planner with Planner Id: {planner.id} already exists");
-            return Conflict($"Planner with Planner Id: {planner.id} already exists");
-        }
-
         PlannerEntity plannerEntity = _mapper.Map<PlannerEntity>(planner);
+        plannerEntity.Id = userEntity.Id;
         await _plannerRepository.CreateAsync(plannerEntity, cancellationToken);
         await _plannerRepository.SaveChangesAsync(cancellationToken);
 
@@ -98,12 +92,6 @@ public class PlannerController : ControllerBase
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdatePlannerAsync(Guid id, [FromBody] PlannerDto planner, CancellationToken cancellationToken)
     {
-        if (id != planner.id)
-        {
-            _logger.LogError($"Id: {id} doesn't match planner id: {planner.id}");
-            return BadRequest("Ids don't match");
-        }
-
         PlannerEntity? plannerEntity = await _plannerRepository.RetrieveAsync(id, cancellationToken);
         if (plannerEntity is null)
         {

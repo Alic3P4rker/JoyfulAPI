@@ -3,7 +3,6 @@ using Joyful.API.Enums;
 namespace Joyful.API.Models;
 
 public record PlannerDto(
-    Guid id,
     string displayName,
     string firstName,
     string lastName,

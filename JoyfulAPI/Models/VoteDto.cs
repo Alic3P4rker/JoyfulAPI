@@ -1,8 +1,7 @@
 namespace Joyful.API.Models;
 
-public record VoteDto (
-    Guid pollId,
-    Guid voterId,
-    string chosenSuggestionsJson,
-    DateTimeOffset votedAt
-);
+public record VoteDto
+{
+    public List<string> ChosenSuggestions { get; set; } = null!;
+    public DateTimeOffset VotedAt { get; set; }
+}

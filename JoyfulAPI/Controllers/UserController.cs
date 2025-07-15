@@ -3,6 +3,7 @@ using AutoMapper;
 using Joyful.API.Abstractions.Repositories;
 using Joyful.API.Entities;
 using Joyful.API.Models;
+using Joyful.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Joyful.API.Controllers;
@@ -15,13 +16,21 @@ public class UserController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
     private readonly ILogger<UserController> _logger;
+    private readonly IPasswordService _password;
 
-    public UserController(IAccountRepository accountRepository, IUserRepository userRepository, IMapper mapper, ILogger<UserController> logger)
+    public UserController(
+        IAccountRepository accountRepository,
+        IUserRepository userRepository,
+        IMapper mapper,
+        ILogger<UserController> logger,
+        IPasswordService password
+    )
     {
         _accountRepository = accountRepository;
         _userRepository = userRepository;
         _mapper = mapper;
         _logger = logger;
+        _password = password;
     }
 
     [HttpPost]
@@ -38,9 +47,7 @@ public class UserController : ControllerBase
 
         //Step 2: Create user
         UserEntity userEntity = _mapper.Map<UserEntity>(user);
-
-#warning implement password hashing here
-        userEntity.PasswordHash = user.Password;
+        userEntity.PasswordHash = _password.HashPassword(user.Password);
         await _userRepository.CreateAsync(userEntity, cancellationToken);
 
         //Step 3: Create user account
@@ -102,8 +109,7 @@ public class UserController : ControllerBase
         _mapper.Map(user, userEntity);
 
         if (!string.IsNullOrEmpty(user.EmailAddress))
-#warning implement password hashing here
-            userEntity.PasswordHash = user.Password;
+            userEntity.PasswordHash = _password.HashPassword(user.Password);
 
 
         await _userRepository.UpdateAsync(userEntity, cancellationToken);

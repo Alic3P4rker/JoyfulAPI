@@ -36,6 +36,12 @@ public sealed class PlannerConfiguration : IEntityTypeConfiguration<PlannerEntit
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
+            .HasMany<ThemeEntity>()
+            .WithOne()
+            .HasForeignKey(t => t.PlannerId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
             .HasMany<EventEntity>()
             .WithOne()
             .HasForeignKey(e => e.CreatedPlannerId)
