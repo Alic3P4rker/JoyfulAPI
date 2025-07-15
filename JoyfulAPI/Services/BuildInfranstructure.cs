@@ -21,6 +21,7 @@ public static class BuildInfranstructure
         services.AddScoped<IUserFriendsRepository, UserFriendsRepository>();
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IPasswordService, PasswordService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
 
         return services;
     }

@@ -13,6 +13,7 @@ namespace Joyful.API.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
+    private readonly IAuthenticationService _authenticationService;
     private readonly IUserRepository _userRepository;
     private readonly IAccountRepository _accountRepository;
     private readonly IConfiguration _configuration;
@@ -21,6 +22,7 @@ public class AuthenticationController : ControllerBase
 
     public AuthenticationController
     (
+        IAuthenticationService authenticationService,
         IUserRepository userRepository,
         IAccountRepository accountRepository,
         IConfiguration configuration,
@@ -28,15 +30,16 @@ public class AuthenticationController : ControllerBase
         IPasswordService password
     )
     {
+        _authenticationService = authenticationService;
         _userRepository = userRepository;
         _accountRepository = accountRepository;
         _configuration = configuration;
         _logger = logger;
         _password = password;
     }
-    
+
     [HttpPost]
-    public async Task<ActionResult<string>> LoginAsync([FromBody] LoginDto login, CancellationToken cancellationToken)
+    public async Task<ActionResult<TokenDto>> LoginAsync([FromBody] LoginDto login, CancellationToken cancellationToken)
     {
         //Step 1: Retrive the user 
         UserEntity? userEntity = await _userRepository.RetrieveByEmailAsync(login.EmailAddress, cancellationToken);
@@ -63,29 +66,7 @@ public class AuthenticationController : ControllerBase
         }
 
         //Step 4: Generate jwt
-        var securityKey = new SymmetricSecurityKey(
-            Convert.FromBase64String(_configuration["Authentication:SecretForKey"]));
-
-        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        var claimsForToken = new List<Claim>();
-        claimsForToken.Add(new Claim("sub", userEntity.Id.ToString()));
-        claimsForToken.Add(new Claim("email", userEntity.EmailAddress));
-
-        var jwtSecurityToken = new JwtSecurityToken(
-            _configuration["Authentication:Issuer"],
-            _configuration["Authentication:Audience"],
-            claimsForToken,
-            DateTime.UtcNow,
-#warning long time for now replace with shorter time and with refresh tokens
-            DateTime.UtcNow.AddMinutes(2),
-            signingCredentials
-        );
-
-        var tokenToReturn = new JwtSecurityTokenHandler()
-            .WriteToken(jwtSecurityToken);
-
-        return Ok(tokenToReturn);
-
+        TokenDto tokenDto = await _authenticationService.CreateToken(userEntity, true);
+        return Ok(tokenDto);
     }
 }

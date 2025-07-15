@@ -1,5 +1,6 @@
 using Joyful.API.Abstractions.Repositories;
 using Joyful.API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -36,7 +37,7 @@ internal sealed class ChatRepository : IChatRepository
         return _context.Chats
             .AsNoTracking()
             .Include(c => c.ChatParticipants)
-            .Where(c => 
+            .Where(c =>
                     c.ChatParticipants.Count == participantsCount &&
                     c.ChatParticipants.All(p => sortedParticipantIds.Contains(p.UserId)))
             .FirstOrDefaultAsync(cancellationToken);
@@ -59,7 +60,7 @@ internal sealed class ChatRepository : IChatRepository
             .AsNoTracking()
             .Include(c => c.Messages)
             .Include(c => c.ChatParticipants)
-            .Where(c => c.CreatedById.Equals(userid) || 
+            .Where(c => c.CreatedById.Equals(userid) ||
                         c.ChatParticipants.Any(p => p.UserId.Equals(userid)))
             .ToArrayAsync(cancellationToken);
 

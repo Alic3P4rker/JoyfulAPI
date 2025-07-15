@@ -5,10 +5,12 @@ using Joyful.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Joyful.API.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class VoteController : ControllerBase
 {

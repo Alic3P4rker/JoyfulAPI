@@ -2,11 +2,13 @@ using AutoMapper;
 using Joyful.API.Abstractions.Repositories;
 using Joyful.API.Entities;
 using Joyful.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Joyful.API.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class PlannerController : ControllerBase
 {

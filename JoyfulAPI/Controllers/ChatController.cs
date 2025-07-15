@@ -1,12 +1,13 @@
-
 using AutoMapper;
 using Joyful.API.Abstractions.Repositories;
 using Joyful.API.Entities;
 using Joyful.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class ChatController : ControllerBase
 {

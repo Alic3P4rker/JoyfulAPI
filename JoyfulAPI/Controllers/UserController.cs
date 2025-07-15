@@ -4,6 +4,7 @@ using Joyful.API.Abstractions.Repositories;
 using Joyful.API.Entities;
 using Joyful.API.Models;
 using Joyful.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Joyful.API.Controllers;
@@ -68,6 +69,7 @@ public class UserController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, userDetailsDto);
     }
 
+    [Authorize]
     [HttpGet("{Id:guid}", Name = "GetUserById")]
     public async Task<ActionResult<UserDetailsDto>> RetrieveUserByIdAsync(Guid Id, CancellationToken cancellationToken)
     {
@@ -83,6 +85,7 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize]
     public async Task<IActionResult> DeleteUserAsync(Guid id, CancellationToken cancellationToken)
     {
         UserEntity? userEntity = await _userRepository.RetrieveByIdAsync(id, cancellationToken);
@@ -96,6 +99,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("{emailAddress}")]
+    [Authorize]
     public async Task<IActionResult> UpdateUserAsync(string emailAddress, [FromBody] UserCreateDto user, CancellationToken cancellationToken)
     {
         if (emailAddress != user.EmailAddress)

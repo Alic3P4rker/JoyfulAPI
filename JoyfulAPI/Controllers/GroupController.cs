@@ -3,11 +3,13 @@ using Joyful.API.Abstractions.Repositories;
 using Joyful.API.Entities;
 using Joyful.API.Models;
 using Joyful.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Joyful.API.Controllers;
 
 [Route("api/[controller]")]
+[Authorize]
 [ApiController]
 public class GroupController : ControllerBase
 {
