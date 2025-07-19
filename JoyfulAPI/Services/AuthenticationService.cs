@@ -89,7 +89,7 @@ internal sealed class AuthenticationService : IAuthenticationService
             IssuerSigningKey = new SymmetricSecurityKey(
                 Convert.FromBase64String(_configuration["Authentication:SecretForKey"])
             ),
-            ValidateLifetime = true,
+            ValidateLifetime = false,
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
         };

@@ -34,7 +34,7 @@ public class UserController : ControllerBase
         _password = password;
     }
 
-    [HttpPost]
+    [HttpPost("create-new-account")]
     public async Task<IActionResult> CreateUserAsync([FromBody] UserCreateDto user, CancellationToken cancellationToken)
     {
         //Step 1: Check if user already exists

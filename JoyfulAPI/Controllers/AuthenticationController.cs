@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Joyful.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/login")]
 [ApiController]
 public class AuthenticationController : ControllerBase
 {

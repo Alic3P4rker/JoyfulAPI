@@ -43,6 +43,7 @@ public class PlannerController : ControllerBase
 
         PlannerEntity plannerEntity = _mapper.Map<PlannerEntity>(planner);
         plannerEntity.Id = userEntity.Id;
+        plannerEntity.EmailAddress = userEntity.EmailAddress;
         await _plannerRepository.CreateAsync(plannerEntity, cancellationToken);
         await _plannerRepository.SaveChangesAsync(cancellationToken);
 
